@@ -8,8 +8,17 @@ BLEIntCharacteristic yDegreesCharacteristic("2222222", BLERead | BLENotify);
 float x, y, z;
 int degreesX = 0;
 int degreesY = 0;
+const int StrigPin = 9;
+const int SechoPin = 10;
+const int FtrigPin = 7;
+const int FechoPin = 8;
+float duration, distance;
 
-void setup() {
+void setup() {s
+  pinMode(FtrigPin, OUTPUT);
+  pinMode(FehcoPin, INPUT);
+  pinMode(StrigPin, OUTPUT);
+  pinMode(SehcoPin, INPUT);
   Serial.begin(9600);
   while (!Serial);
   Serial.println("Started");
@@ -43,7 +52,13 @@ void setup() {
 }
 
 void loop() {
+
+  distanceF = getDistanceFront();
+  distanceB = getDistanceBack();
+
   BLEDevice central = BLE.central();
+
+  
 
   if (central) {
     Serial.print("Connected to central: ");
@@ -96,4 +111,38 @@ void loop() {
     Serial.print("Disconnected from central: ");
     Serial.println(central.address());
 
+}
+
+float getDistanceFront()
+{
+  float echoTimeF;                   //variable to store the time it takes for a ping to bounce off an object
+  float calculatedDistanceF;         //variable to store the distance calculated from the echo time
+  
+  //send out an ultrasonic pulse that's 10ms long
+  digitalWrite(FtrigPin, HIGH);
+  delayMicroseconds(10); 
+  digitalWrite(FtrigPin, LOW);
+
+  echoTimeF = pulseIn(FechoPin, HIGH);      //use the pulsein command to see how long it takes for the pulse to bounce back to the sensor
+
+  calculatedDistanceF = echoTimeF / 148.0;  //calculate the distance of the object that reflected the pulse (half the bounce time multiplied by the speed of sound)
+  
+  return calculatedDistanceF;              //send back the distance that was calculated
+}
+
+float getDistanceSide()
+{
+  float echoTimeS;                   //variable to store the time it takes for a ping to bounce off an object
+  float calculatedDistanceS;         //variable to store the distance calculated from the echo time
+  
+  //send out an ultrasonic pulse that's 10ms long
+  digitalWrite(StrigPin, HIGH);
+  delayMicroseconds(10); 
+  digitalWrite(StrigPin, LOW);
+
+  echoTimeS = pulseIn(SechoPin, HIGH);      //use the pulsein command to see how long it takes for the pulse to bounce back to the sensor
+
+  calculatedDistanceB = echoTimeS / 148.0;  //calculate the distance of the object that reflected the pulse (half the bounce time multiplied by the speed of sound)
+  
+  return calculatedDistanceS;              //send back the distance that was calculated
 }
