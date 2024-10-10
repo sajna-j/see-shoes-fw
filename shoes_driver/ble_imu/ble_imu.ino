@@ -53,8 +53,9 @@ void setup() {s
 
 void loop() {
 
-  distanceF = getDistanceFront();
-  distanceB = getDistanceBack();
+  // TODO: once the real sensors are connected use these! (Test bench only has one so this has to be changed anyways)
+  // distanceF = getDistanceFront();
+  // distanceB = getDistanceBack();
 
   BLEDevice central = BLE.central();
 
