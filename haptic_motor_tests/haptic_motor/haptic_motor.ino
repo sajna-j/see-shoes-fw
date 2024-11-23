@@ -1,3 +1,4 @@
+
 const int frontMotor = A7;
 float userNum = 255; // To store the user input
 
@@ -8,7 +9,7 @@ void setup() {
 }
 
 void loop() {
-  
+
   if (Serial.available() > 0) {
     // Read the user input
     userNum = Serial.parseFloat(); // Read the integer input
@@ -21,18 +22,11 @@ void loop() {
     Serial.print("You entered: ");
     Serial.println(userNum); // Echo the input back to the Serial Monitor
   }
-
-  Serial.print("User num is: ");
-  Serial.println(userNum); // Echo the input back to the Serial Monitor
-
+  
   // Turn on the motor
   analogWrite(frontMotor, userNum);  // vibrate
   Serial.print("Front Motor ON ");
-  delay(3000);  // Run for 3 second
+  delay(500);  // Run for 3 second
 
-  // Turn off the motor
-  analogWrite(frontMotor, 0);  // Turn off
-  Serial.println("Front Motor OFF!");
-  delay(3000);  // Stay off for 3 sec
 
 }
