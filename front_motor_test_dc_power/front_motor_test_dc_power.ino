@@ -1,28 +1,33 @@
 #include <ArduinoBLE.h>
 #include "Arduino_BMI270_BMM150.h"
 
-// Motor and Sensor Pins
-const int sideMotorPin = A3;
+//Motor pins
+const int sideMotorPin = A5;
 const int frontMotorPin = A7;
+float sideVibration, frontVibration;
 
+// Distance Sensor Pins
 const int trigPinFront = 7;
 const int echoPinFront = 6;
 const int trigPinSide = 11;
 const int echoPinSide = 10;
 
-// Variables
-float x, y, z;
-int degreesX = 0;
-int degreesY = 0;
 float distanceFront = 0;
 float distanceSide = 0;
-const int distanceThresholdCane = 46.8; // Threshold distance to activate the motor
+
+const int distanceThresholdCane = 46.8;
 const int distanceThresholdStep = 24;
 const float percentRaiseBtwnThresFront = 0.4;
 const float percentRaiseBtwnThresSide = 0.6;
 const float remainingPercentFront = 1 - percentRaiseBtwnThresFront;
 const float remainingPercentSide = 1 - percentRaiseBtwnThresSide;
-float sideVibration, frontVibration;
+
+// IMU result variables
+const int imuThres = 60;
+bool imu_angled_down;
+float x, y, z;
+int degreesX = 0;
+int degreesY = 0;
 
 void setup() {
   
@@ -47,43 +52,35 @@ void setup() {
 
 void loop() {
 
-    // Read IMU data
-    if (IMU.accelerationAvailable()) {
-      IMU.readAcceleration(x, y, z);
-      //handleIMU();
-    }
+  // Read distance data
+  distanceFront = getDistance(trigPinFront, echoPinFront);
+  distanceSide = getDistance(trigPinSide, echoPinSide);
+  Serial.print("Front: ");
+  Serial.print(distanceFront);
+  Serial.print("\tSide: ");
+  Serial.println(distanceSide);
 
-    // Read distance data
-    distanceFront = getDistance(trigPinFront, echoPinFront);
-    distanceSide = getDistance(trigPinSide, echoPinSide);
-    Serial.print("Front: ");
-    Serial.print(distanceFront);
-    Serial.print("\tSide: ");
-    Serial.println(distanceSide);
-    /*
-    //Control motor based on distance
-    if (distanceFront < distanceThresholdCane && distanceSide < distanceThresholdCane) {
-      activateBoth(distanceFront, distanceSide);
+  if (distanceFront < distanceThresholdCane) {
+    activateMotorFront(distanceFront);
+  }
+  else {
+    deactivateMotorFront();
+  }
 
-    } else if (distanceFront < distanceThresholdCane) {
-      activateMotorFront(distanceFront);
-      deactivateMotorSide();
-    } else if (distanceSide < distanceThresholdCane) {
-      activateMotorSide(distanceSide);
-      deactivateMotorFront();
-    }
-    else {
-      deactivateBoth();
-    }
-    */
+  delay(100);
 
-    if (distanceFront < distanceThresholdCane) {
-      activateMotorSide(distanceSide);
-    } else {
-      deactivateMotorSide();
-    }
+}
+bool IMU_okay_angle() {
+  if (x < -0.1) {
 
-    delay(100);
+    x = 100 * x;
+    degreesX = map(x, 0, -100, 0, 90);
+    Serial.print("Tilting down ");
+    Serial.print(degreesX);
+    Serial.println(" degrees");
+    return degreesX < imuThres;
+  }
+  return true;
 
 }
 
