@@ -26,11 +26,7 @@ void loop() {
   // Turn on the motor
   analogWrite(frontMotor, userNum);  // vibrate
   Serial.print("Front Motor ON ");
-  delay(3000);  // Run for 3 second
+  delay(500);  // Run for 3 second
 
-  // Turn off the motor
-  analogWrite(frontMotor, 0);  // Turn off
-  Serial.println("Front Motor OFF!");
-  delay(3000);  // Stay off for 3 sec
 
 }
