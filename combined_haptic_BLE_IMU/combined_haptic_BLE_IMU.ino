@@ -2,15 +2,15 @@
 #include "Arduino_BMI270_BMM150.h"
 
 //Motor pins
-const int sideMotorPin = A5;
-const int frontMotorPin = A4;
+const int sideMotorPin = A3;
+const int frontMotorPin = A7;
 float sideVibration, frontVibration;
 
 // Distance Sensor Pins
 const int trigPinFront = 7;
-const int echoPinFront = 6;
+const int echoPinFront = 6;  // second shoe: 7
 const int trigPinSide = 11;
-const int echoPinSide = 10;
+const int echoPinSide = 10; // second shoe 11
 
 float distanceFront = 0;
 float distanceSide = 0;
@@ -64,23 +64,25 @@ void loop() {
         Serial.println(distanceSide);
 
         //Control motor based on distance
-        if (distanceFront < distanceThresholdCane && distanceSide < distanceThresholdCane) {
-          activateBoth(distanceFront, distanceSide);
-
-        } else if (distanceFront < distanceThresholdCane) {
+        if (distanceFront < distanceThresholdCane) {
           activateMotorFront(distanceFront);
-          deactivateMotorSide();
-        } else if (distanceSide < distanceThresholdCane) {
-          activateMotorSide(distanceSide);
+        } else {
           deactivateMotorFront();
+        } 
+        if (distanceSide < distanceThresholdCane) {
+          activateMotorSide(distanceSide);
         }
         else {
-          deactivateBoth();
+          deactivateMotorSide();
         }
       }
+      else {
+        deactivateBoth();
+      }
+    } 
+    else {
+      deactivateBoth(); // if not at okay angle, none should be activated
     }
-
-    deactivateBoth(); // if not at okay angle, none should be activated
     delay(100);
 
 }
