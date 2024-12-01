@@ -2,15 +2,15 @@
 #include "Arduino_BMI270_BMM150.h"
 
 //Motor pins
-const int sideMotorPin = A3;
+const int sideMotorPin = A5;
 const int frontMotorPin = A7;
 float sideVibration, frontVibration;
 
 // Distance Sensor Pins
 const int trigPinFront = 7;
-const int echoPinFront = 6;  // second shoe: 7
+const int echoPinFront = 6;
 const int trigPinSide = 11;
-const int echoPinSide = 10; // second shoe 11
+const int echoPinSide = 10;
 
 float distanceFront = 0;
 float distanceSide = 0;
@@ -52,38 +52,22 @@ void setup() {
 
 void loop() {
 
-    if (IMU.accelerationAvailable()) {
-      IMU.readAcceleration(x, y, z);
-      if (IMU_okay_angle()) {
-        // Read distance data
-        distanceFront = getDistance(trigPinFront, echoPinFront);
-        distanceSide = getDistance(trigPinSide, echoPinSide);
-        Serial.print("Front: ");
-        Serial.print(distanceFront);
-        Serial.print("\tSide: ");
-        Serial.println(distanceSide);
+  // Read distance data
+  distanceFront = getDistance(trigPinFront, echoPinFront);
+  distanceSide = getDistance(trigPinSide, echoPinSide);
+  Serial.print("Front: ");
+  Serial.print(distanceFront);
+  Serial.print("\tSide: ");
+  Serial.println(distanceSide);
 
-        //Control motor based on distance
-        if (distanceFront < distanceThresholdCane) {
-          activateMotorFront(distanceFront);
-        } else {
-          deactivateMotorFront();
-        } 
-        if (distanceSide < distanceThresholdCane) {
-          activateMotorSide(distanceSide);
-        }
-        else {
-          deactivateMotorSide();
-        }
-      }
-      else {
-        deactivateBoth();
-      }
-    } 
-    else {
-      deactivateBoth(); // if not at okay angle, none should be activated
-    }
-    delay(100);
+  if (distanceFront < distanceThresholdCane) {
+    activateMotorFront(distanceFront);
+  }
+  else {
+    deactivateMotorFront();
+  }
+
+  delay(100);
 
 }
 bool IMU_okay_angle() {

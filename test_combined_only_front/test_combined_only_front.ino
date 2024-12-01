@@ -2,13 +2,13 @@
 #include "Arduino_BMI270_BMM150.h"
 
 // Motor and Sensor Pins
-const int sideMotorPin = A5;
+const int sideMotorPin = A3;
 const int frontMotorPin = A7;
 
-const int trigPinSide = 7;
-const int echoPinSide = 6;
-const int trigPinFront = 11;
-const int echoPinFront = 10;
+const int trigPinFront = 7;
+const int echoPinFront = 6;
+const int trigPinSide = 11;
+const int echoPinSide = 10;
 
 // Variables
 float x, y, z;
