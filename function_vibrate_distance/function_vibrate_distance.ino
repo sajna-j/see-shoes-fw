@@ -1,5 +1,5 @@
 #include "Arduino_BMI270_BMM150.h"
-// LEFT shoe
+// BOTH SHOES -- THIS IS THE FINAL SCRIPT
 
 const float imuThres = 60;
 
