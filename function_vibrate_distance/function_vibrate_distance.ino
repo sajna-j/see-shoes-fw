@@ -24,8 +24,8 @@ const float remainingPercentSide = 1 - percentRaiseBtwnThresSide;
 // Distance Sensor Pins
 const int trigPinSide = 12;
 const int echoPinSide = 9;
-const int trigPinFront = 7; // 6;
-const int echoPinFront = 6; //7;
+const int trigPinFront = 7;
+const int echoPinFront = 5; 
 
 
 void setup() {
